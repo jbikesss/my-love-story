@@ -1,1 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Story</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&family=Caveat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <style>
+        /* PASTE ALL YOUR CSS HERE (The code I gave you earlier) */
+:root {
+    --pink: #f8bbd0;
+    --dark-pink: #f06292;
+    --purple: #ce93d8;
+    --white: #ffffff;
+}
 
+body {
+    margin: 0; font-family: 'Quicksand', sans-serif;
+    background: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 100%);
+    overflow-x: hidden;
+}
+
+.overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: var(--white); z-index: 2000;
+    display: flex; justify-content: center; align-items: center;
+}
+
+.background-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+.heart { position: absolute; color: var(--pink); animation: float 6s infinite linear; }
+@keyframes float { 0% { transform: translateY(110vh); opacity: 1; } 100% { transform: translateY(-10vh); opacity: 0; } }
+
+h1, h2 { font-family: 'Dancing Script', cursive; color: var(--dark-pink); font-size: 3rem; }
+.container { padding: 60px 20px; text-align: center; max-width: 1100px; margin: auto; }
+
+/* Horizontal Scrolling Logic (Shared for Photos and Voice) */
+.photo-wrapper, .voice-wrapper { 
+    width: 100%; overflow-x: auto; padding: 20px 0; 
+    scrollbar-width: thin; scrollbar-color: var(--dark-pink) transparent;
+}
+.photo-grid, .voice-scroll-grid { display: flex; gap: 30px; width: max-content; }
+
+/* Photo Card */
+.photo-card img {
+    width: 280px; height: 380px; object-fit: cover;
+    border: 8px solid white; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* Video Styling */
+.video-grid { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+.video-card { background: white; padding: 15px; border-radius: 20px; width: 320px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+.romantic-video { width: 100%; border-radius: 10px; }
+
+/* Voice Card Scrolling */
+.voice-card {
+    width: 260px; background: white; padding: 20px; border-radius: 20px; 
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05); flex: 0 0 auto;
+}
+
+/* Waveform Animation */
+.waveform { display: flex; gap: 4px; height: 40px; justify-content: center; align-items: center; margin-bottom: 15px; }
+.waveform span { width: 6px; height: 15px; background: var(--dark-pink); border-radius: 10px; }
+.waveform.playing span { animation: wave 0.8s infinite ease-in-out; }
+.waveform.playing span:nth-child(2) { animation-delay: 0.1s; }
+.waveform.playing span:nth-child(3) { animation-delay: 0.2s; }
+@keyframes wave { 0%, 100% { height: 15px; } 50% { height: 40px; } }
+
+/* Shared Button Styles */
+.btn-main, .btn-heart, .btn-voice {
+    background: var(--dark-pink); color: white; border: none; padding: 10px 25px;
+    border-radius: 25px; cursor: pointer; transition: 0.3s;
+}
+.btn-voice { background: var(--purple); }
+.btn-main:hover, .btn-voice:hover { transform: scale(1.05); opacity: 0.9; }
+
+.hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+.letter-card { background: white; padding: 20px; margin: 10px auto; max-width: 600px; border-radius: 10px; font-family: 'Caveat'; font-size: 1.5rem; }
+
+/* Bouquet Section */
+.bouquet-section {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle, #fff5f8 0%, #fce4ec 100%);
+}
+
+.bouquet-container {
+    position: relative;
+    height: 400px;
+    width: 300px;
+    margin-top: 50px;
+}
+
+/* The Tulip Structure */
+.tulip {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform-origin: bottom center;
+}
+
+.stem {
+    width: 6px;
+    height: 200px;
+    background: #81c784;
+    border-radius: 10px;
+}
+
+.flower {
+    width: 50px;
+    height: 60px;
+    background: #f48fb1; /* Pink Tulip Color */
+    border-radius: 50% 50% 50% 50% / 80% 80% 20% 20%;
+    position: absolute;
+    top: -55px;
+    left: -22px;
+    box-shadow: inset -10px -10px 20px rgba(0,0,0,0.1);
+    animation: bloom 3s infinite ease-in-out;
+}
+
+/* Complex Petal Details */
+.flower::before, .flower::after {
+    content: '';
+    position: absolute;
+    background: #f06292;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    transform-origin: bottom center;
+}
+
+.flower::before { transform: rotate(-15deg); opacity: 0.8; }
+.flower::after { transform: rotate(15deg); opacity: 0.8; }
+
+/* Individual Tulip Placements & Swaying */
+.t1 { transform: translateX(-60px) rotate(-20deg); animation: sway 4s infinite ease-in-out; }
+.t2 { transform: translateX(-30px) rotate(-10deg); animation: sway 5s infinite ease-in-out 0.5s; }
+.t3 { transform: translateX(0px) rotate(0deg); animation: sway 3.5s infinite ease-in-out 1s; }
+.t4 { transform: translateX(30px) rotate(10deg); animation: sway 4.5s infinite ease-in-out 0.2s; }
+.t5 { transform: translateX(60px) rotate(20deg); animation: sway 3.8s infinite ease-in-out 0.7s; }
+
+/* Animations */
+@keyframes sway {
+    0%, 100% { transform: translateX(var(--x)) rotate(var(--r)); }
+    50% { transform: translateX(var(--x)) rotate(calc(var(--r) + 5deg)); }
+}
+
+/* Re-defining the sway for each to keep their base position */
+.t1 { --x: -60px; --r: -20deg; }
+.t2 { --x: -30px; --r: -10deg; }
+.t3 { --x: 0px; --r: 0deg; }
+.t4 { --x: 30px; --r: 10deg; }
+.t5 { --x: 60px; --r: 20deg; }
+
+@keyframes bloom {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Ribbon */
+.ribbon {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 40px;
+    background: #ce93d8;
+    border-radius: 20px;
+    z-index: 10;
+}
+
+.ribbon::after {
+    content: '❤️';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2rem;
+}
+
+.gift-text {
+    margin-top: 40px;
+    font-family: 'Caveat', cursive;
+    font-size: 2rem;
+    color: var(--dark-pink);
+}
+        /* Make sure to copy everything from :root to the Tulip animations */
+    </style>
+</head>
+<body>
+    
+    <div id="overlay" class="overlay">
+        <div class="overlay-content">
+            <h1>Ready to see our story?</h1>
+            <button onclick="startSite()" class="btn-main"> Open My Heart ❤️</button>
+        </div>
+    </div>
+
+    <div class="background-animation"></div>
+
+    <audio id="bgMusic" loop>
+        <source src="{{ url_for('static', filename='music/Taylor_Swift_Lover.mp3') }}" type="audio/mpeg">
+    </audio>
+
+    <header class="hero">
+        <h1 data-aos="zoom-in">To My Dearest ❤️</h1>
+        <p data-aos="fade-up">A simple valentine gift for you.</p>
+        <button onclick="scrollToSection('gallery')" class="btn-heart">Explore</button>
+    </header>
+
+    <section id="gallery" class="container">
+        <h2 data-aos="fade-right">My Hidden Treasure</h2>
+        <div class="photo-wrapper">
+            <div class="photo-grid">
+                <div class="photo-card" data-aos="fade-up">
+                    <img src="{{ url_for('static', filename='images/photo1.jpg') }}" onerror="this.src='https://via.placeholder.com/300x400?text=Your+Photo+1'">
+                    <p>Where it began</p>
+                </div>
+                <div class="photo-card" data-aos="fade-up" data-aos-delay="100">
+                    <img src="{{ url_for('static', filename='images/photo2.jpg') }}" onerror="this.src='https://via.placeholder.com/300x400?text=Your+Photo+2'">
+                    <p>The moment we first shared time</p>
+                </div>
+                <div class="photo-card" data-aos="fade-up" data-aos-delay="200">
+                    <img src="{{ url_for('static', filename='images/photo3.jpg') }}" onerror="this.src='https://via.placeholder.com/300x400?text=Your+Photo+3'">
+                    <p>The first look of love</p>
+                </div>
+                <div class="photo-card" data-aos="fade-up" data-aos-delay="300">
+                    <img src="{{ url_for('static', filename='images/photo4.jpg') }}" onerror="this.src='https://via.placeholder.com/300x400?text=Your+Photo+4'">
+                    <p>First stolen pic</p>
+                </div>
+                <div class="photo-card" data-aos="fade-up" data-aos-delay="300">
+                    <img src="{{ url_for('static', filename='images/photo5.jpg') }}" onerror="this.src='https://via.placeholder.com/300x400?text=Your+Photo+5'">
+                    <p>First callsign</p>
+                </div>
+                <div class="photo-card" data-aos="fade-up" data-aos-delay="300">
+                    <img src="{{ url_for('static', filename='images/photo6.jpg') }}" onerror="this.src='https://via.placeholder.com/300x400?text=Your+Photo+6'">
+                    <p>First Milktea with youu</p>
+                </div>
+                <div class="photo-card" data-aos="fade-up" data-aos-delay="300">
+                    <img src="{{ url_for('static', filename='images/photo7.jpg') }}" onerror="this.src='https://via.placeholder.com/300x400?text=Your+Photo+7'">
+                    <p>First kerengkengg</p>
+                </div>
+                <div class="photo-card" data-aos="fade-up" data-aos-delay="300">
+                    <img src="{{ url_for('static', filename='images/photo8.jpg') }}" onerror="this.src='https://via.placeholder.com/300x400?text=Your+Photo+8'">
+                    <p>My First Date</p>
+                </div>
+                <div class="photo-card" data-aos="fade-up" data-aos-delay="300">
+                    <img src="{{ url_for('static', filename='images/photo9.jpg') }}" onerror="this.src='https://via.placeholder.com/300x400?text=Your+Photo+9'">
+                    <p>A hold of Lovee</p>
+                </div>
+                <div class="photo-card" data-aos="fade-up" data-aos-delay="300">
+                    <img src="{{ url_for('static', filename='images/photo10.jpg') }}" onerror="this.src='https://via.placeholder.com/300x400?text=Your+Photo+10'">
+                    <p>Bili iskulsuplay widyuu</p>
+                </div>
+                <div class="photo-card" data-aos="fade-up" data-aos-delay="300">
+                    <img src="{{ url_for('static', filename='images/photo11.jpg') }}" onerror="this.src='https://via.placeholder.com/300x400?text=Your+Photo+11'">
+                    <p>Baby Time</p>
+                </div>
+                <div class="photo-card" data-aos="fade-up" data-aos-delay="300">
+                    <img src="{{ url_for('static', filename='images/photo12.jpg') }}" onerror="this.src='https://via.placeholder.com/300x400?text=Your+Photo+12'">
+                    <p>Another baby time</p>
+                </div>
+                <div class="photo-card" data-aos="fade-up" data-aos-delay="300">
+                    <img src="{{ url_for('static', filename='images/photo13.jpg') }}" onerror="this.src='https://via.placeholder.com/300x400?text=Your+Photo+13'">
+                    <p>Unplaned visit to my baby</p>
+                </div>
+                <div class="photo-card" data-aos="fade-up" data-aos-delay="300">
+                    <img src="{{ url_for('static', filename='images/photo14.jpg') }}" onerror="this.src='https://via.placeholder.com/300x400?text=Your+Photo+14'">
+                    <p>My Pahingaa</p>
+                </div>
+                <div class="photo-card" data-aos="fade-up" data-aos-delay="300">
+                    <img src="{{ url_for('static', filename='images/photo15.jpg') }}" onerror="this.src='https://via.placeholder.com/300x400?text=Your+Photo+15'">
+                    <p>My Christmas Gift</p>
+                </div>
+                <div class="photo-card" data-aos="fade-up" data-aos-delay="300">
+                    <img src="{{ url_for('static', filename='images/photo16.jpg') }}" onerror="this.src='https://via.placeholder.com/300x400?text=Your+Photo+16'">
+                    <p>Double Date</p>
+                </div>
+                <div class="photo-card" data-aos="fade-up" data-aos-delay="300">
+                    <img src="{{ url_for('static', filename='images/photo17.jpg') }}" onerror="this.src='https://via.placeholder.com/300x400?text=Your+Photo+17'">
+                    <p>Gan'to tayo ka-Close</p>
+                </div>
+                <div class="photo-card" data-aos="fade-up" data-aos-delay="300">
+                    <img src="{{ url_for('static', filename='images/photo18.jpg') }}" onerror="this.src='https://via.placeholder.com/300x400?text=Your+Photo+18'">
+                    <p>4k wallpaper widmababy</p>
+                </div>
+                <div class="photo-card" data-aos="fade-up" data-aos-delay="300">
+                    <img src="{{ url_for('static', filename='images/photo19.jpg') }}" onerror="this.src='https://via.placeholder.com/300x400?text=Your+Photo+19'">
+                    <p>My First Ever Bouquet</p>
+                </div>
+                <div class="photo-card" data-aos="fade-up" data-aos-delay="300">
+                    <img src="{{ url_for('static', filename='images/photo20.jpg') }}" onerror="this.src='https://via.placeholder.com/300x400?text=Your+Photo+20'">
+                    <p>Being so proud to my love</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="video-memories" class="container">
+        <h2 data-aos="fade-up">The Sweetest Love</h2>
+        <div class="video-grid">
+            <div class="video-card" data-aos="zoom-in">
+                <video autoplay muted loop playsinline class="romantic-video">
+                    <source src="{{ url_for('static', filename='images/video1.mp4') }}" type="video/mp4">
+                </video>
+                <p class="caption">My favorite memory 🎥</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="voice-memories" class="container">
+        <h2 data-aos="fade-right">My secret voice message</h2>
+        <div class="voice-wrapper">
+            <div class="voice-scroll-grid">
+                <div class="voice-card" data-aos="fade-up">
+                    <h3>Listen to Me 🎙️</h3>
+                    <div class="waveform">
+                        <span></span><span></span><span></span><span></span><span></span>
+                    </div>
+                    <audio class="voice-audio">
+                        <source src="{{ url_for('static', filename='images/voice1.mp3') }}" type="audio/mpeg">
+                    </audio>
+                    <button onclick="playVoice(this)" class="btn-voice">Play Message</button>
+                </div>
+                <div class="voice-card" data-aos="fade-up" data-aos-delay="100">
+                    <h3>A Secret Note 🎙️</h3>
+                    <div class="waveform">
+                        <span></span><span></span><span></span><span></span><span></span>
+                    </div>
+                    <audio class="voice-audio">
+                        <source src="{{ url_for('static', filename='images/voice2.mp3') }}" type="audio/mpeg">
+                    </audio>
+                    <button onclick="playVoice(this)" class="btn-voice">Play Message</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="letters" class="container">
+        <h2 data-aos="fade-up">Love Letters</h2>
+        <div class="letter-list">
+            {% for letter in letters %}
+            <div class="letter-card" data-aos="fade-up">
+                <p>"{{ letter.message }}"</p>
+                <span>- From {{ letter.sender }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="add-letter-form">
+            <input type="text" id="senderName" placeholder="Your Name">
+            <textarea id="loveMessage" placeholder="Write something sweet..."></textarea>
+            <button onclick="sendLetter()" class="btn-main">Post Message ❤️</button>
+        </div>
+    </section>
+
+    <section id="the-gift" class="container bouquet-section">
+    <h2 data-aos="zoom-in">Happy valentines po🌸</h2>
+    <div class="bouquet-container">
+        <div class="bouquet">
+            <div class="tulip t1">
+                <div class="leaf"></div>
+                <div class="stem"></div>
+                <div class="flower"></div>
+            </div>
+            <div class="tulip t2">
+                <div class="leaf"></div>
+                <div class="stem"></div>
+                <div class="flower"></div>
+            </div>
+            <div class="tulip t3">
+                <div class="leaf"></div>
+                <div class="stem"></div>
+                <div class="flower"></div>
+            </div>
+            <div class="tulip t4">
+                <div class="leaf"></div>
+                <div class="stem"></div>
+                <div class="flower"></div>
+            </div>
+            <div class="tulip t5">
+                <div class="leaf"></div>
+                <div class="stem"></div>
+                <div class="flower"></div>
+            </div>
+            <div class="ribbon"></div>
+        </div>
+    </div>
+    <p class="gift-text" data-aos="fade-up">These tulips will never fade, just like my memorries with you.</p>
+    </section>
+    
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        // PASTE ALL YOUR JAVASCRIPT LOGIC HERE
+AOS.init({ duration: 1000 });
+const music = document.getElementById('bgMusic');
+
+function startSite() {
+    document.getElementById('overlay').style.display = 'none';
+    music.play();
+}
+
+function scrollToSection(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+}
+
+// Logic for multiple Voice Notes
+function playVoice(btn) {
+    const card = btn.parentElement;
+    const audio = card.querySelector('.voice-audio');
+    const wave = card.querySelector('.waveform');
+
+    // Pause all other audio first
+    document.querySelectorAll('.voice-audio').forEach(a => {
+        if (a !== audio) {
+            a.pause();
+            a.parentElement.querySelector('.waveform').classList.remove('playing');
+            a.parentElement.querySelector('.btn-voice').innerText = "Play Message";
+        }
+    });
+
+    if (audio.paused) {
+        audio.play();
+        wave.classList.add('playing');
+        btn.innerText = "Pause";
+        music.volume = 0.2;
+    } else {
+        audio.pause();
+        wave.classList.remove('playing');
+        btn.innerText = "Play Message";
+        music.volume = 1.0;
+    }
+
+    audio.onended = () => {
+        wave.classList.remove('playing');
+        btn.innerText = "Play Message";
+        music.volume = 1.0;
+    };
+}
+
+// Heart Particles
+function createHeart() {
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    heart.innerHTML = '❤️';
+    heart.style.left = Math.random() * 100 + 'vw';
+    heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+    document.querySelector('.background-animation').appendChild(heart);
+    setTimeout(() => heart.remove(), 5000);
+}
+setInterval(createHeart, 600);
+
+function sendLetter() {
+            const sender = document.getElementById('senderName').value;
+            const message = document.getElementById('loveMessage').value;
+            if(!message) return;
+            
+            const list = document.getElementById('letterList');
+            const newLetter = `<div class="letter-card"><p>"${message}"</p><span>- From ${sender}</span></div>`;
+            list.innerHTML += newLetter;
+            
+            // Save to browser memory
+            localStorage.setItem('savedLetters', list.innerHTML);
+        }
+
+// Sparkle hearts when viewing the gift
+window.onscroll = function() {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100) {
+        // We are at the bottom! Let's burst hearts.
+        for(let i=0; i<5; i++) {
+            setTimeout(createHeart, i * 100);
+        }
+    }
+}
+    </script>
+</body>
+</html>
