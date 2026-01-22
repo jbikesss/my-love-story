@@ -341,19 +341,13 @@ h1, h2 { font-family: 'Dancing Script', cursive; color: var(--dark-pink); font-s
     </section>
 
     <section id="letters" class="container">
-        <h2 data-aos="fade-up">Love Letters</h2>
+        <h2 data-aos="fade-up">Hi Danica!</h2>
         <div class="letter-list">
-            {% for letter in letters %}
+            
             <div class="letter-card" data-aos="fade-up">
-                <p>"{{ letter.message }}"</p>
-                <span>- From {{ letter.sender }}</span>
+                <p>"You make every day feel like a dream. ❤️"</p>
+                <span>- From lambottt</span>
             </div>
-            {% endfor %}
-        </div>
-        <div class="add-letter-form">
-            <input type="text" id="senderName" placeholder="Your Name">
-            <textarea id="loveMessage" placeholder="Write something sweet..."></textarea>
-            <button onclick="sendLetter()" class="btn-main">Post Message ❤️</button>
         </div>
     </section>
 
