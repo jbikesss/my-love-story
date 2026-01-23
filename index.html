@@ -217,7 +217,7 @@ h1, h2 { font-family: 'Dancing Script', cursive; color: var(--dark-pink); font-s
         <div class="photo-wrapper">
             <div class="photo-grid">
                 <div class="photo-card" data-aos="fade-up">
-                    <img src="{{ url_for('static', filename='images/photo1.jpg') }}" onerror="this.src='https://via.placeholder.com/300x400?text=Your+Photo+1'">
+                    <img src="static/images/photo1.jpg" onerror="this.src='https://via.placeholder.com/300x400?text=Your+Photo+1'">
                     <p>Where it began</p>
                 </div>
                 <div class="photo-card" data-aos="fade-up" data-aos-delay="100">
@@ -305,7 +305,7 @@ h1, h2 { font-family: 'Dancing Script', cursive; color: var(--dark-pink); font-s
         <div class="video-grid">
             <div class="video-card" data-aos="zoom-in">
                 <video autoplay muted loop playsinline class="romantic-video">
-                    <source src="{{ url_for('static', filename='images/video1.mp4') }}" type="video/mp4">
+                    <source src="static/images/video1.mp4" type="video/mp4">
                 </video>
                 <p class="caption">My favorite memory 🎥</p>
             </div>
@@ -322,7 +322,7 @@ h1, h2 { font-family: 'Dancing Script', cursive; color: var(--dark-pink); font-s
                         <span></span><span></span><span></span><span></span><span></span>
                     </div>
                     <audio class="voice-audio">
-                        <source src="{{ url_for('static', filename='images/voice1.mp3') }}" type="audio/mpeg">
+                        <source src="static/images/voice1.mp3" type="audio/mpeg">
                     </audio>
                     <button onclick="playVoice(this)" class="btn-voice">Play Message</button>
                 </div>
