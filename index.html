@@ -657,7 +657,7 @@ const rabbitEl = document.getElementById('rabbit');
 let particles = [];
 let isMouseDown = false;
 const mouse = { x: 0, y: 0 };
-const particleCount = 1000;
+const particleCount = 5000;
 
 // Rabbit State
 let rabbitPos = { x: window.innerWidth / 2 };
@@ -691,8 +691,8 @@ class Particle {
         this.homeY = y;
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.vx = (Math.random() - 0.5) * 10;
-        this.vy = (Math.random() - 0.5) * 10;
+        this.vx = (Math.random() - 0.5) * 15;
+        this.vy = (Math.random() - 0.5) * 15;
         this.radius = Math.random() * 2.5 + 1;
         this.color = `rgba(240, 98, 146, ${Math.random() * 0.6 + 0.4})`;
     }
