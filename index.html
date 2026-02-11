@@ -798,90 +798,115 @@ window.addEventListener('resize', initWorld);
 initWorld();
 render();
 
-/* --- FINAL STABLE HEART ANIMATION --- */
-const canvas = document.getElementById('heartCanvas');
-const heartSection = document.getElementById('heart-section');
+/* --- 100% IDENTICAL WITH SMOOTH WOBBLE & FORMATION --- */
+(function() { 
+    window.addEventListener('load', () => {
+        const canvas = document.getElementById('heartCanvas');
+        const section = document.getElementById('heart-section');
+        if (!canvas || !section) return;
 
-// 1. Keep everything inside a function so it doesn't run automatically
-function startHeartParadise() {
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    let width, height;
-    let animationActive = false;
-
-    const heartText = "i miss you"; 
-    const centerText = "i miss you";
-
-    function resize() {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
-    }
-
-    window.addEventListener('resize', resize);
-    resize();
-
-    function getHeartPoint(t, scale) {
-        const x = 16 * Math.pow(Math.sin(t), 3); 
-        const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-        return {
-            x: x * scale + width / 2,
-            y: y * scale + height / 2
-        };
-    }
-
-    function animate() {
-        if (!animationActive) return; // Kill process if not looking at it
-
-        ctx.clearRect(0, 0, width, height);
-        const time = Date.now() * 0.0015;
-        const beat = Math.pow(Math.sin(time * Math.PI), 63) * 0.15; 
-        const scaleBase = Math.min(width, height) / 35; 
-        const scale = scaleBase * (1 + beat); 
-
-        ctx.font = "bold 14px Arial";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
+        const ctx = canvas.getContext('2d');
+        let width, height, animationActive = false;
         
-        // Draw Outer Heart
-        for (let i = 0; i < 60; i++) {
-            const t = (i / 60) * Math.PI * 2;
-            const pos = getHeartPoint(t, scale);
-            ctx.fillStyle = "#ff007f"; 
-            ctx.shadowBlur = 15;       
-            ctx.shadowColor = "#ff007f";
-            ctx.fillText(heartText, pos.x, pos.y);
+        let formationProgress = 0; 
+        const formationSpeed = 0.002; 
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
         }
 
-        // Draw Center Text
-        ctx.font = `bold ${scaleBase * 1.5}px Arial`;
-        ctx.fillStyle = "#ffbdd8"; 
-        ctx.setTransform(1 + beat * 0.5, 0, 0, 1 + beat * 0.5, width/2, height/2);
-        ctx.fillText(centerText, 0, 0);
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        // Updated Point Function with 3D-Like Wobble
+        function getHeartPoint(t, scale, timeOffset) {
+            // Parametric Heart Formula
+            let x = 16 * Math.pow(Math.sin(t), 3); 
+            let y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+            
+            // SMOOTH WOBBLE MATH:
+            // We apply a sine wave to the X and Y based on time and the position (t)
+            // This creates the "breathing" and "liquid" effect from the video
+            const wobbleX = Math.sin(timeOffset + t * 2) * 0.8;
+            const wobbleY = Math.cos(timeOffset * 0.8 + t * 2) * 0.8;
+            
+            return { 
+                x: (x + wobbleX) * scale + width / 2, 
+                y: (y + wobbleY) * scale + height / 2 
+            };
+        }
 
-        requestAnimationFrame(animate);
-    }
+        function animate() {
+            if (!animationActive) return;
+            ctx.clearRect(0, 0, width, height);
 
-    // 2. ONLY start the logic when the heart section is visible
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                animationActive = true;
-                animate();
-            } else {
-                animationActive = false;
+            // Time variable for the wobble speed
+            const time = Date.now() * 0.0007;
+            
+            // Gentle breathing scale (Smoothly grows and shrinks)
+            const breathe = Math.sin(time) * 0.05;
+            const scaleBase = Math.min(width, height) / 35; 
+            const scale = scaleBase * (1 + breathe); 
+
+            const density = 75; 
+            for (let i = 0; i < density; i++) {
+                const t = (i / density) * Math.PI * 2;
+                
+                const wordThreshold = i / density;
+                if (formationProgress < wordThreshold) continue;
+
+                // Pass 'time' to the point function for the wobble effect
+                const targetPos = getHeartPoint(t, scale, time);
+                
+                const wordProgress = Math.min(1, (formationProgress - wordThreshold) * 5);
+                const spread = (1 - wordProgress) * 100;
+                const drawX = targetPos.x + Math.cos(t * 10) * spread;
+                const drawY = targetPos.y + Math.sin(t * 10) * spread;
+                const alpha = wordProgress;
+
+                ctx.font = "bold 13px Arial";
+                ctx.textAlign = "center";
+                ctx.fillStyle = `rgba(255, 0, 127, ${alpha})`; 
+                ctx.shadowBlur = 15 * alpha;       
+                ctx.shadowColor = "#ff007f";
+                ctx.fillText("i miss you", drawX, drawY);
             }
-        });
-    }, { threshold: 0.1 });
 
-    observer.observe(heartSection);
-}
+            // Center Text with the same smooth wobble
+            if (formationProgress > 0.9) {
+                const centerAlpha = Math.min(1, (formationProgress - 0.9) * 10);
+                ctx.font = `bold ${scaleBase * 1.6}px Arial`;
+                ctx.fillStyle = `rgba(255, 189, 216, ${centerAlpha})`; 
+                ctx.shadowBlur = 25 * centerAlpha;
+                ctx.shadowColor = "#ff007f";
+                
+                // Slight floating movement for center text
+                const centerX = width / 2 + Math.sin(time * 0.5) * 5;
+                const centerY = height / 2 + Math.cos(time * 0.5) * 5;
+                
+                ctx.fillText("I miss you siopao ko", centerX, centerY);
+            }
 
-// 3. WAIT until the entire page is loaded before even setting up the observer
-window.addEventListener('load', () => {
-    // Give it a 5-second delay after load just to be safe for the "Enter" button
-    setTimeout(startHeartParadise, 5000);
-});
+            if (formationProgress < 1.1) {
+                formationProgress += formationSpeed;
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                animationActive = entry.isIntersecting;
+                if (animationActive) {
+                    formationProgress = 0; 
+                    animate();
+                }
+            });
+        }, { threshold: 0.1 });
+
+        window.addEventListener('resize', resize);
+        resize();
+        observer.observe(section);
+    });
+})();
         
     </script>
 </body>
